@@ -27,7 +27,7 @@ client = redis.Redis(host='localhost', port=6379, db=0)
 client_pubsub = client.pubsub()
 # subscribe to classical music
 client_pubsub.subscribe(MUSIC_CATEGORY["CLASSIC"])
-
+client_pubsub.psubscribe()
 
 mozzart_redis = redis.Redis(host='localhost', port=6379, db=0)
 mozzart_redis.publish(MUSIC_CATEGORY["CLASSIC"], "mozzart music")
