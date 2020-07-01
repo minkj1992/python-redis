@@ -23,10 +23,10 @@ MUSIC_CATEGORY = {
     "KPOP":'k-pop-music'
 }
 
-music_redis = redis.Redis(host='localhost', port=6379, db=0)
-music_pub_sub = music_redis.pubsub()
+client = redis.Redis(host='localhost', port=6379, db=0)
+client_pubsub = client.pubsub()
 # subscribe to classical music
-music_pub_sub.subscribe(MUSIC_CATEGORY["CLASSIC"])
+client_pubsub.subscribe(MUSIC_CATEGORY["CLASSIC"])
 
 
 mozzart_redis = redis.Redis(host='localhost', port=6379, db=0)
@@ -34,21 +34,21 @@ mozzart_redis.publish(MUSIC_CATEGORY["CLASSIC"], "mozzart music")
 
 print("# mozzart_reids == music_redis?")
 print(mozzart_redis)
-print(music_redis)
-print(mozzart_redis == music_redis)
+print(client)
+print(mozzart_redis == client)
 
 print("# must be ignored!")
-tmp = music_pub_sub.get_message()
+tmp = client_pubsub.get_message()
 print(tmp)
 
 print("# new music, new_music['data]")
-new_music = music_pub_sub.get_message()
+new_music = client_pubsub.get_message()
 print(new_music)
 print(new_music['data'])
 
 
 print("# another new music, another new music['data]")
 mozzart_redis.publish(MUSIC_CATEGORY["CLASSIC"], "mozzart music2")
-another_music = music_pub_sub.get_message()
+another_music = client_pubsub.get_message()
 print(another_music)
 print(another_music['data'])
